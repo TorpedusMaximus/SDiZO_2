@@ -1,4 +1,5 @@
-﻿#include <iostream>
+﻿
+#include <iostream>
 #include <random>
 #include <conio.h>
 #include <iomanip>
@@ -23,22 +24,84 @@ int main() {
 	QueryPerformanceFrequency((LARGE_INTEGER*)&frequency);
 
 	int wybor = 1;
+	string sciezka;
 
 	while (1) {  //menu glowne 
 		system("cls");
-		cout << "Wybierz sturture do testow. \n1.Tablica \n2.Lista \n3.Kopiec \n4.Wyjdz" << endl;
+		cout << "\n1.Wczytaj Graf \n2.Wyswietl \n3.Wyznaczenie minimalnego drzewa rozpinajacego \n4.Wyznaczenie najkrotszej sciezki \n5.Wyczysc graf \n6.Wyjdz" << endl;
 		cin >> wybor;
+		system("cls");
+
 		switch (wybor) {
 		case 1:
-
+			cout << "Podaj sciezke pliku"<< endl;
+			cin >> sciezka;
+			//wyczysc graf 
+			//wczytaj
+			_getch();
 			break;
 		case 2:
+			while(1) {
+				system("cls");
+				cout << "\n1.Reprezentacja macierzowa \n2.Reprezentacja listowa" << endl;
+				cin >> wybor;
 
+				if (wybor == 1) {
+					//wyswietl macierzowo
+					_getch();
+					break;
+				}
+				if (wybor == 2) {
+					//wyswietl listowo
+					_getch();
+					break;
+				}	
+			}
 			break;
 		case 3:
+			while (1) {
+				system("cls");
+				cout << "\n1.Algorytm Kruskala \n2.Algorytm Prima" << endl;
+				cin >> wybor;
 
+				if (wybor == 1) {
+					//Kruskal
+					_getch();
+					break;
+				}
+				if (wybor == 2) {
+					//Prim
+					_getch();
+					break;
+				}
+			}
 			break;
 		case 4:
+			while (1) {
+				system("cls");
+				cout << "\n1.Algorytm Dijkstry \n2.Algorytm Bellmana-Forda" << endl;
+				cin >> wybor;
+
+				if (wybor == 1) {
+					//Dijkstra
+					_getch();
+					break;
+				}
+				if (wybor == 2) {
+					//BF
+					_getch();
+					break;
+				}
+			}
+			break;
+		case 5:
+			cout << "Rozpoczynam czyszczenie" << endl;
+			//wyczysc graf
+			cout << "Wyczyszczono strukture" << endl;
+			_getch();
+			break;
+		case 6:
+			//wyczysc graf
 			return 0;
 			break;
 		}
