@@ -1,0 +1,27 @@
+wczytywanie 6722 ms
+wczytywanie 659 ms
+wczytywanie 632 ms
+
+wczytywanie 636 ms
+wczytywanie 651 ms
+wczytywanie 718 ms
+
+wczytywanie 657 ms
+wczytywanie 670 ms
+wczytywanie 716 ms
+
+wczytywanie 626 ms
+wczytywanie 655 ms
+wczytywanie 655 ms
+
+wczytywanie 640 ms
+wczytywanie 692 ms
+wczytywanie 682 ms
+
+wczytanie 708 ms
+wczytanie 664 ms
+wczytanie 926 ms
+wczytanie 789 ms
+wczytanie 722 ms
+
+wczytanie 592 ms
