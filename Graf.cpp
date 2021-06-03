@@ -155,12 +155,86 @@ void Graf::dijkstryMacierz()
 
 void Graf::kruskalaLista()
 {
+	vector<list<elementListy>> listaKruskala=listaSasiadow;
+	sortujListe(listaKruskala);
+	list<elementMinimalnegoDrzewa> krawedzie;
+	float minimum = inf;
+	int index=0;
+	elementMinimalnegoDrzewa element;
+	vector<elementMinimalnegoDrzewa> wyniki;//struktura prechowujaca wyniki
+	float wagaCalkowita = 0;
+	vector<vector<int>>zbiorWierzcholkowRozpatrzonych;
+	zbiorWierzcholkowRozpatrzonych.resize(liczbaWierzcholkow);
+
+	for (int i = 0; i < liczbaKrawedzi; i++) {
+		minimum = inf;
+		for (int j = 0; j < liczbaWierzcholkow; j++) {
+			if (listaKruskala[j].size() > 0) {
+				if (listaKruskala[j].front().waga < minimum) {
+					minimum = listaKruskala[j].front().waga;
+					index = j;
+				}
+			}
+		}
+		element.waga = minimum;
+		element.wierzcholekA = index;
+		element.wierzcholekB = listaKruskala[index].front().wierzcholek;
+		krawedzie.push_back(element);
+		listaKruskala[index].pop_front();
+	}
+	listaKruskala.clear();
+	listaKruskala.resize(0);
+
+	for (int i = 0; i < liczbaWierzcholkow; i++) {
+		zbiorWierzcholkowRozpatrzonych[i].push_back(i);
+	}
+
+	wyswietlListe(listaSasiadow);
+
+	vector<int>::iterator flagaA, flagaB;
+	int indexA, indexB;   //////////////////naprawic
+	while (krawedzie.size()) {
+		element = krawedzie.front();
+		krawedzie.pop_front();
+		
+		
+		for (int i = 0; i < zbiorWierzcholkowRozpatrzonych.size(); i++) {
+			flagaA =find(zbiorWierzcholkowRozpatrzonych[i].begin(), zbiorWierzcholkowRozpatrzonych[i].end(), element.wierzcholekA);
+			if (flagaA!= zbiorWierzcholkowRozpatrzonych[i].end()) {
+				indexA = i;
+				break;
+			}
+		}
+		for (int i = 0; i < zbiorWierzcholkowRozpatrzonych.size(); i++) {
+			flagaB=find(zbiorWierzcholkowRozpatrzonych[i].begin(), zbiorWierzcholkowRozpatrzonych[i].end(), element.wierzcholekB);
+			if (flagaB != zbiorWierzcholkowRozpatrzonych[i].end()){
+				indexB = i;
+				break;
+			}
+		}
+		if (indexA != indexB) {
+			wyniki.push_back(element);
+			zbiorWierzcholkowRozpatrzonych[indexA].assign(zbiorWierzcholkowRozpatrzonych[indexB].begin(), zbiorWierzcholkowRozpatrzonych[indexB].end());
+			zbiorWierzcholkowRozpatrzonych.erase(zbiorWierzcholkowRozpatrzonych.begin()+indexB);
+			wagaCalkowita += element.waga;
+		}
+
+	}
+	
+	wypiszPrima(wyniki, wagaCalkowita);
+	
+	wyniki.clear();
+	wyniki.resize(0);
+	zbiorWierzcholkowRozpatrzonych.clear();
+	zbiorWierzcholkowRozpatrzonych.resize(0);
+	krawedzie.clear();
+	krawedzie.resize(0);
 
 }
 
 void Graf::kruskalaMacierz()
 {
-
+	
 }
 
 void Graf::primaLista()

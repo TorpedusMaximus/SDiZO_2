@@ -66,3 +66,29 @@ wczytanie 622 us
 wczytanie 493 us
 
 wczytanie 548 us
+
+wczytanie 549 us
+
+wczytanie 634 us
+
+wczytanie 594 us
+
+wczytanie 574 us
+
+wczytanie 575 us
+
+wczytanie 532 us
+
+wczytanie 570 us
+
+wczytanie 599 us
+
+wczytanie 570 us
+
+wczytanie 784 us
+
+wczytanie 1268 us
+
+wczytanie 540 us
+
+wczytanie 611 us
