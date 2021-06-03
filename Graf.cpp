@@ -47,30 +47,52 @@ void Graf::wczytaj(string sciezka)
 	}
 
 	dane.close();//usuniecie handlera
-	sortujListe();
+	sortujListe(listaSasiadow);
 	tester.zakonczPomiar(kodyAkcji[0]);
 	cout << "Wczytano graf" << endl;
 }
 
-void Graf::wyswietlMacierz()
+void Graf::wyswietlMacierz(vector<vector<float>> macierz)
 {
 	system("cls");
-	if (liczbaWierzcholkow == 0) {//sprawdzenie istnienia grafu
+	if (macierz.size() == 0) {//sprawdzenie istnienia grafu
 		cout << "Brak grafu";
 		return;
 	}
 
 	cout << "Reprezentacja macierzowa" << endl << endl;
-	for (int i = 0; i < liczbaWierzcholkow; i++) {//wywietlenie wierszy
-		for (int j = 0; j < liczbaWierzcholkow; j++) {//wyswtielenie kolumn
-			cout << macierzWag[i][j] << " ";
+	for (int i = 0; i < macierz.size(); i++) {//wywietlenie wierszy
+		for (int j = 0; j <(int) macierz.size(); j++) {//wyswtielenie kolumn
+			cout << macierz[i][j];
+
+			if (macierz[i][j]== inf) {
+				cout << " ";
+			}
+			else {
+				if (macierz[i][j] >=10) {
+					cout << "  ";
+				}
+				else {
+					if (macierz[i][j] >=0) {
+						cout << "   ";
+					}
+					else {
+						if (macierz[i][j] >=-9) {
+							cout << "  ";
+						}
+						else {
+							cout << " ";
+						}
+					}
+				}
+			}
 		}
 		cout << endl;
 	}
 	cout << endl;
 }
 
-void Graf::wyswietlListe()
+void Graf::wyswietlListe(vector<list<elementListy>> lista)
 {
 	system("cls");
 	if (liczbaWierzcholkow == 0) {//sprawdzenie istnienia grafu
@@ -81,7 +103,7 @@ void Graf::wyswietlListe()
 	cout << "Reprezentacja listowa" << endl << endl;
 	for (int i = 0; i < liczbaWierzcholkow; i++) {//wyswtielenie elemntu listy 
 		cout << i << " -> ";
-		for (auto& element : listaSasiadow[i]) {
+		for (auto& element : lista[i]) {
 			cout << "[" << element.wierzcholek << "/" << element.waga << "], ";
 		}
 		cout << endl;
@@ -143,9 +165,20 @@ void Graf::kruskalaMacierz()
 
 void Graf::primaLista()
 {
+	vector<list<elementListy>> listaPrima;  //graf nieskierowany 
+	listaPrima.resize(liczbaWierzcholkow);
+	elementListy temp;
+	for (int i = 0; i < liczbaWierzcholkow; i++) {//zamiana zapisanego grafu skierowanego na nieskierowany
+		for (auto& element : listaSasiadow[i]) {
+			listaPrima[i].push_back(element);
+			temp.wierzcholek = i;
+			temp.waga = element.waga;
+			listaPrima[element.wierzcholek].push_back(temp);
+		}
+	}
+	sortujListe(listaPrima);//sortowanie 
 
-
-	vector<elementPrima> wyniki;//struktura prechowujaca wyniki
+	vector<elementMinimalnegoDrzewa> wyniki;//struktura prechowujaca wyniki
 	wyniki.resize(liczbaWierzcholkow - 1);
 	vector<int> zbiorWierzcholkowRozpatrzonych;//struktura ZWR
 	zbiorWierzcholkowRozpatrzonych.push_back(wierzcholekPoczatkowy);//dodanie poczatkowego wierzcholka do ZWR
@@ -157,16 +190,16 @@ void Graf::primaLista()
 
 	for (int i = 0; i < liczbaWierzcholkow - 1; i++) {
 		minimum = inf;
-		for (int j = 0; j < (int)zbiorWierzcholkowRozpatrzonych.size(); j++) {
-			for (auto& element : listaSasiadow[zbiorWierzcholkowRozpatrzonych[j]]) {
+		for (int j = 0; j <i+1; j++) {
+			for (auto& element : listaPrima[zbiorWierzcholkowRozpatrzonych[j]]) {
 				bool rozpatrzone = find(zbiorWierzcholkowRozpatrzonych.begin(), zbiorWierzcholkowRozpatrzonych.end(), element.wierzcholek) != zbiorWierzcholkowRozpatrzonych.end();//sprawdzenie stanu wierzcholka
 				if (!rozpatrzone) {//sprawdzamy wage krawedzi z wierzcholkiem z poza ZWR
 					if (element.waga < minimum) {//porownanie z aktualnym minimum
-						poprzedniWierzcholek = j;
+						poprzedniWierzcholek = zbiorWierzcholkowRozpatrzonych[j];
 						minimum = element.waga;
 						nastepnyWierzcholek = element.wierzcholek;
 					}
-					//break;//lista jest posortowana, wiec nie tzreba dalej sprawdzac
+					break;//lista jest posortowana, wiec nie tzreba dalej sprawdzac
 				}
 			}
 		}
@@ -177,24 +210,79 @@ void Graf::primaLista()
 		wyniki[i].wierzcholekB = nastepnyWierzcholek;
 		wyniki[i].waga = minimum;
 	}
+	wyswietlListe(listaPrima);
 	wypiszPrima(wyniki, wagaCalkowita);
 	
 	zbiorWierzcholkowRozpatrzonych.clear();//czyszczenie 
 	wyniki.clear();
+	listaPrima.clear();
 	zbiorWierzcholkowRozpatrzonych.resize(0);
 	wyniki.resize(0);
+	listaPrima.resize(0);
 }
 
 void Graf::primaMacierz()
 {
+	vector<vector<float>> macierzPrima;//graf nieskierowany
+	macierzPrima.resize(liczbaWierzcholkow, vector<float>(liczbaWierzcholkow, inf));
+	for (int i = 0; i < liczbaWierzcholkow; i++) {
+		for (int j = 0; j < liczbaWierzcholkow; j++) {//zamiana grafuy skierowanego na nieksierowany
+			if (macierzWag[i][j] != numeric_limits<float>::infinity()) {
+				macierzPrima[i][j] = macierzWag[i][j];
+				macierzPrima[j][i] = macierzWag[i][j];
+			}
+		}
+	}
+	wyswietlMacierz(macierzPrima);
 
+	vector<elementMinimalnegoDrzewa> wyniki;//struktura prechowujaca wyniki
+	wyniki.resize(liczbaWierzcholkow - 1);
+	vector<int> zbiorWierzcholkowRozpatrzonych;//struktura ZWR
+	zbiorWierzcholkowRozpatrzonych.push_back(wierzcholekPoczatkowy);//dodanie poczatkowego wierzcholka do ZWR
+	int poprzedniWierzcholek = wierzcholekPoczatkowy;
+	int nastepnyWierzcholek;
+	float wagaCalkowita = 0;
+	float minimum;
+
+	for (int i = 0; i < liczbaWierzcholkow - 1; i++) {
+		minimum = inf;
+		for (int j = 0; j < i+1; j++) {
+			for (int k = 0; k < liczbaWierzcholkow; k++) {
+				if (macierzPrima[zbiorWierzcholkowRozpatrzonych[j]][k] != inf) {
+					bool rozpatrzone = find(zbiorWierzcholkowRozpatrzonych.begin(),zbiorWierzcholkowRozpatrzonych.end(), k) != zbiorWierzcholkowRozpatrzonych.end();
+					if (!rozpatrzone) {
+						if (macierzPrima[zbiorWierzcholkowRozpatrzonych[j]][k] < minimum) {
+							poprzedniWierzcholek = zbiorWierzcholkowRozpatrzonych[j];
+							minimum = macierzPrima[zbiorWierzcholkowRozpatrzonych[j]][k];
+							nastepnyWierzcholek = k;
+						}
+					}
+				}
+			}
+		}
+		zbiorWierzcholkowRozpatrzonych.push_back(nastepnyWierzcholek);
+		wagaCalkowita += minimum;
+
+		wyniki[i].wierzcholekA = poprzedniWierzcholek;//zapisanie wyniku
+		wyniki[i].wierzcholekB = nastepnyWierzcholek;
+		wyniki[i].waga = minimum;
+	}
+	wyswietlMacierz(macierzPrima);
+	wypiszPrima(wyniki, wagaCalkowita);
+
+	zbiorWierzcholkowRozpatrzonych.clear();//czyszczenie 
+	wyniki.clear();
+	macierzPrima.clear();
+	zbiorWierzcholkowRozpatrzonych.resize(0);
+	wyniki.resize(0);
+	macierzPrima.resize(0);
 }
 
 void Graf::bellmanaFordaLista()
 {
 	bool ujemnyCykl = false;//sprawdzenie istnienia ujemnego cyklu
 	deque<int> kolejkaWierzcholkow;//kolejka wierzcholkow do sprawdzenia
-	vector<elementBelmanaForda> droga(liczbaWierzcholkow);//droga do wierzcholka
+	vector<elementNajkrotszejSciezki> droga(liczbaWierzcholkow);//droga do wierzcholka
 	vector<int> historiaKolejki;
 
 	droga[wierzcholekPoczatkowy].sciezka.push_back(wierzcholekPoczatkowy);//ustalenie drogi do wierzcholka startowego
@@ -229,6 +317,7 @@ void Graf::bellmanaFordaLista()
 			}
 		}
 	}
+	wyswietlListe(listaSasiadow);
 	wypiszBelmanaForda(ujemnyCykl, droga);//wypisanie wyniku
 
 	kolejkaWierzcholkow.clear();//oczyszczenie struktur pomocniczych
@@ -243,7 +332,7 @@ void Graf::bellmanaFordaMacierz()
 {
 	bool ujemnyCykl = false;//sprawdzenie istnienia ujemnego cyklu
 	deque<int> kolejkaWierzcholkow;//kolejka wierzcholkow do sprawdzenia
-	vector<elementBelmanaForda> droga(liczbaWierzcholkow);//droga do wierzcholka
+	vector<elementNajkrotszejSciezki> droga(liczbaWierzcholkow);//droga do wierzcholka
 	vector<int> historiaKolejki;
 
 	droga[wierzcholekPoczatkowy].sciezka.push_back(wierzcholekPoczatkowy);//ustalenie drogi do wierzcholka startowego
@@ -279,6 +368,7 @@ void Graf::bellmanaFordaMacierz()
 			}
 		}
 	}
+	wyswietlMacierz(macierzWag);
 	wypiszBelmanaForda(ujemnyCykl, droga);//wypisanie wyniku
 
 	kolejkaWierzcholkow.clear();//oczyszczenie struktur pomocniczych
@@ -293,12 +383,12 @@ void Graf::bellmanaFordaMacierz()
 ////////////////////////////////////////pomocnicze////////////////////////////////////////
 
 
-void Graf::wypiszBelmanaForda(bool ujemnyCykl, vector<elementBelmanaForda> droga) {
+void Graf::wypiszBelmanaForda(bool ujemnyCykl, vector<elementNajkrotszejSciezki> droga) {
 	if (ujemnyCykl) {//sprawdzenie istnienai ujemnego cyklu
-		cout << "Cykl ujemny" << endl;
+		cout <<endl<< "Cykl ujemny" << endl;
 	}
 	else {
-		cout << "koniec : wartosc drogi : droga" << endl;
+		cout <<endl<< "koniec : wartosc drogi : droga" << endl;
 
 		for (int a = 0; a < (int)droga.size(); a++) {//wyswietlenie wag i drog 
 			cout << a << " : " << droga[a].wagaDrogi << " : ";
@@ -317,19 +407,19 @@ void Graf::wypiszBelmanaForda(bool ujemnyCykl, vector<elementBelmanaForda> droga
 
 }
 
-void Graf::wypiszPrima(vector<elementPrima> wyniki, int wagaCalkowita)
+void Graf::wypiszPrima(vector<elementMinimalnegoDrzewa> wyniki, int wagaCalkowita)
 {
-	cout << "wierzcholki : waga" << endl;
-	for (int i = 0; i < liczbaWierzcholkow - 1; i++) {
+	cout <<endl<<"wierzcholki : waga" << endl;
+	for (int i = 0; i < wyniki.size(); i++) {
 		cout << wyniki[i].wierzcholekA << " -> " << wyniki[i].wierzcholekB << " : " << wyniki[i].waga << endl;
 	}
 	cout << "MST = " << wagaCalkowita << endl;
 }
 
-void Graf::sortujListe()
+void Graf::sortujListe(vector<list<elementListy>> &lista)
 {
-	for (int i = 0; i < liczbaWierzcholkow; i++) {
-		listaSasiadow[i].sort([](const elementListy& a, const elementListy& b) {
+	for (int i = 0; i < lista.size(); i++) {
+		lista[i].sort([](const elementListy& a, const elementListy& b) {
 			return a.waga < b.waga;
 			});
 	}

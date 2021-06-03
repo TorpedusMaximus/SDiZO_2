@@ -1,53 +1,68 @@
 
+wczytanie 639 us
 
-wczytanie 657 us
+wczytanie 640 us
 
-wczytanie 672 us
+wczytanie 3225 us
 
-wczytanie 1014 us
+wczytanie 636 us
 
-wczytanie 951 us
+wczytanie 590 us
+wczytanie 7064 us
 
-wczytanie 735 us
+wczytanie 579 us
 
-wczytanie 728 us
-
-wczytanie 6702 us
-
-wczytanie 7159 us
-
-wczytanie 625 us
-
-wczytanie 773 us
-
+wczytanie 1226 us
 wczytanie 517 us
-wczytanie 486 us
 
-wczytanie 569 us
+wczytanie 514 us
+
+wczytanie 642 us
+
+wczytanie 578 us
+
+wczytanie 8810 us
+
+wczytanie 700 us
+
+wczytanie 572 us
+
+wczytanie 106973534 us
+
+wczytanie 781 us
+
+wczytanie 591 us
+
+wczytanie 578 us
+
+wczytanie 622 us
+
+
+wczytanie 857 us
+
+wczytanie 693 us
+
+wczytanie 685 us
+
+wczytanie 505 us
+
+wczytanie 1029 us
+
+wczytanie 694 us
 
 wczytanie 574 us
 
-wczytanie 517 us
+wczytanie 583 us
 
-wczytanie 575 us
+wczytanie 535 us
 
-wczytanie 516 us
+wczytanie 548 us
 
-wczytanie 503 us
+wczytanie 563 us
 
-wczytanie 559 us
+wczytanie 546 us
 
-wczytanie 648 us
+wczytanie 622 us
+wczytanie 493 us
 
-wczytanie 489 us
-
-wczytanie 490 us
-
-
-wczytanie 556 us
-
-wczytanie 6375 us
-
-wczytanie 568 us
-
-wczytanie 575 us
+wczytanie 548 us

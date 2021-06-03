@@ -27,8 +27,8 @@ public:
 	
 	//zarzadzanie grafem
 	void wczytaj(string sciezka);
-	void wyswietlMacierz();
-	void wyswietlListe();
+	void wyswietlMacierz(vector<vector<float>> macierz);
+	void wyswietlListe(vector<list<elementListy>> lista);
 	void usunGraf();
 	void zakoncz();
 
@@ -43,8 +43,8 @@ public:
 	void bellmanaFordaMacierz();
 
 private:
-	void wypiszBelmanaForda(bool ujemnyCykl,vector<elementBelmanaForda> drogi);
-	void wypiszPrima(vector<elementPrima> wyniki, int wagaCalkowita);
-	void sortujListe();
+	void wypiszBelmanaForda(bool ujemnyCykl,vector<elementNajkrotszejSciezki> drogi);
+	void wypiszPrima(vector<elementMinimalnegoDrzewa> wyniki, int wagaCalkowita);
+	void sortujListe(vector<list<elementListy>> &lista);
 };
 

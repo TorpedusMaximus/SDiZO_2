@@ -8,13 +8,13 @@ struct elementListy { // element listy krawedzi
 	float waga;
 };
 
-struct elementPrima { // element wyniku algorytmu prima
+struct elementMinimalnegoDrzewa { // element wyniku algorytmu prima
 	int wierzcholekA;
 	int wierzcholekB;
-	int waga;
+	float waga;
 };
 
-struct elementBelmanaForda {  // element listy drog w algorytmie bellmana-forda
+struct elementNajkrotszejSciezki {  // element listy drog w algorytmie bellmana-forda
 	float inf = numeric_limits<float>::infinity();
 	float wagaDrogi = inf;
 	list<int> sciezka;

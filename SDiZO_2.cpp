@@ -38,12 +38,12 @@ int main() {
 				cin >> wybor;
 
 				if (wybor == 1) {
-					graf.wyswietlMacierz();
+					graf.wyswietlMacierz(graf.macierzWag);
 					_getch();
 					break;
 				}
 				if (wybor == 2) {
-					graf.wyswietlListe();
+					graf.wyswietlListe(graf.listaSasiadow);
 					_getch();
 					break;
 				}	
