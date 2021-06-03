@@ -1,27 +1,53 @@
-wczytywanie 6722 ms
-wczytywanie 659 ms
-wczytywanie 632 ms
 
-wczytywanie 636 ms
-wczytywanie 651 ms
-wczytywanie 718 ms
 
-wczytywanie 657 ms
-wczytywanie 670 ms
-wczytywanie 716 ms
+wczytanie 657 us
 
-wczytywanie 626 ms
-wczytywanie 655 ms
-wczytywanie 655 ms
+wczytanie 672 us
 
-wczytywanie 640 ms
-wczytywanie 692 ms
-wczytywanie 682 ms
+wczytanie 1014 us
 
-wczytanie 708 ms
-wczytanie 664 ms
-wczytanie 926 ms
-wczytanie 789 ms
-wczytanie 722 ms
+wczytanie 951 us
 
-wczytanie 592 ms
+wczytanie 735 us
+
+wczytanie 728 us
+
+wczytanie 6702 us
+
+wczytanie 7159 us
+
+wczytanie 625 us
+
+wczytanie 773 us
+
+wczytanie 517 us
+wczytanie 486 us
+
+wczytanie 569 us
+
+wczytanie 574 us
+
+wczytanie 517 us
+
+wczytanie 575 us
+
+wczytanie 516 us
+
+wczytanie 503 us
+
+wczytanie 559 us
+
+wczytanie 648 us
+
+wczytanie 489 us
+
+wczytanie 490 us
+
+
+wczytanie 556 us
+
+wczytanie 6375 us
+
+wczytanie 568 us
+
+wczytanie 575 us

@@ -26,6 +26,12 @@ int main() {
 			_getch();
 			break;
 		case 2:
+			if (graf.liczbaWierzcholkow == 0) {
+				system("cls");
+				cout << "Brak grafu" << endl;
+				_getch();
+				break;
+			}
 			while(1) {
 				system("cls");
 				cout << "1.Reprezentacja macierzowa \n2.Reprezentacja listowa" << endl;
@@ -44,36 +50,104 @@ int main() {
 			}
 			break;
 		case 3:
+			if (graf.liczbaWierzcholkow == 0) {
+				system("cls");
+				cout << "Brak grafu" << endl;
+				_getch();
+				break;
+			}
 			while (1) {
 				system("cls");
 				cout << "1.Algorytm Kruskala \n2.Algorytm Prima" << endl;
 				cin >> wybor;
 
 				if (wybor == 1) {
-					//Kruskal
+					while (1) {
+						system("cls");
+						cout << "1.Listowo \n2.Macierzowo" << endl;
+						cin >> wybor;
+						if (wybor == 1) {
+							system("cls");
+							graf.kruskalaLista();
+							break;
+						}
+						if (wybor == 2) {
+							system("cls");
+							graf.kruskalaMacierz();
+							break;
+						}
+					}
 					_getch();
 					break;
 				}
 				if (wybor == 2) {
-					//Prim
+					while (1) {
+						system("cls");
+						cout << "1.Listowo \n2.Macierzowo" << endl;
+						cin >> wybor;
+						if (wybor == 1) {
+							system("cls");
+							graf.primaLista();
+							break;
+						}
+						if (wybor == 2) {
+							system("cls");
+							graf.primaMacierz();
+							break;
+						}
+					}
 					_getch();
 					break;
 				}
 			}
 			break;
 		case 4:
+			if (graf.liczbaWierzcholkow == 0) {
+				system("cls");
+				cout << "Brak grafu" << endl;
+				_getch();
+				break;
+			}
 			while (1) {
 				system("cls");
 				cout << "1.Algorytm Dijkstry \n2.Algorytm Bellmana-Forda" << endl;
 				cin >> wybor;
 
 				if (wybor == 1) {
-					//Dijkstra
+					while (1) {
+						system("cls");
+						cout << "1.Listowo \n2.Macierzowo" << endl;
+						cin >> wybor;
+						if (wybor == 1) {
+							system("cls");
+							graf.dijkstryLista();
+							break;
+						}
+						if (wybor == 2) {
+							system("cls");
+							graf.dijkstryMacierz();
+							break;
+						}
+					}
 					_getch();
 					break;
 				}
 				if (wybor == 2) {
-					//BF
+					while (1) {
+					system("cls");
+					cout << "1.Listowo \n2.Macierzowo" << endl;
+					cin >> wybor; 
+					if (wybor == 1) {
+						system("cls");
+						graf.bellmanaFordaLista();
+						break;
+					}
+					if (wybor == 2) {
+						system("cls");
+						graf.bellmanaFordaMacierz();
+						break;
+					}
+					}
 					_getch();
 					break;
 				}

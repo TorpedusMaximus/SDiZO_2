@@ -2,6 +2,7 @@
 #include <string>
 #include <fstream>
 #include <iostream>
+#include <iomanip>
 
 using namespace std;
 
@@ -12,8 +13,7 @@ public:
 
 	Tester();
 	void startPomiaru();
-	void koniecPomiaru();
-	void zapisWyniku(string kodAkcji);
+	void zakonczPomiar(string kodAkcji);
 	void zakoncz();
 
 private:

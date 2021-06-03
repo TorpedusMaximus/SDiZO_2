@@ -11,13 +11,9 @@
 #include <stdlib.h>
 #include <time.h>
 #include "Tester.h"
+#include "elementy.h"
 
 using namespace std;
-
-struct elementListy {
-	int wierzcholek;
-	float waga;
-};
 
 class Graf{
 public:
@@ -46,5 +42,9 @@ public:
 	void bellmanaFordaLista();
 	void bellmanaFordaMacierz();
 
+private:
+	void wypiszBelmanaForda(bool ujemnyCykl,vector<elementBelmanaForda> drogi);
+	void wypiszPrima(vector<elementPrima> wyniki, int wagaCalkowita);
+	void sortujListe();
 };
 

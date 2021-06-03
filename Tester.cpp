@@ -1,11 +1,12 @@
 #include "Tester.h"
 
+
 using namespace std;
 
 Tester::Tester()
 {
 	QueryPerformanceFrequency((LARGE_INTEGER*)&czestotliwosc);
-	wynik.open("wynik.txt", fstream::app);
+	wynik.open("wynik.txt", fstream::app);//handler do pliku
 	wynik << endl;
 }
 
@@ -19,24 +20,19 @@ long long int Tester::odczytCzasu() { // wartosc licznika czasu
 
 void Tester::startPomiaru()
 {
-	poczatek = odczytCzasu();
+	poczatek = odczytCzasu();//rozpoczecie liczenia czasu
 }
 
-void Tester::koniecPomiaru()
+void Tester::zakonczPomiar(string kodAkcji)
 {
-	koniec = odczytCzasu();
+	koniec = odczytCzasu();//zakonczenie liczenia czasu 
 	czas = (1000000.0 * (koniec - poczatek)) / czestotliwosc;
-}
-
-void Tester::zapisWyniku(string kodAkcji)
-{
-	cout << kodAkcji << " " << czas << " ms" << endl;
-	wynik << kodAkcji << " " << czas << " ms" << endl;
+	wynik << kodAkcji << " "<< setprecision(0) << czas << " us" << endl;//za[pisanie czasu do pliku 
 }
 
 void Tester::zakoncz()
 {
-	wynik.close();
+	wynik.close();//zamkniecie handlera
 	cout << "Zapisano pliki" << endl;
 }
 

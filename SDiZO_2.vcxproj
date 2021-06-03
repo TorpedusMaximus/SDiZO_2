@@ -145,6 +145,7 @@
     <ClCompile Include="Tester.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="elementy.h" />
     <ClInclude Include="Graf.h" />
     <ClInclude Include="Tester.h" />
   </ItemGroup>
