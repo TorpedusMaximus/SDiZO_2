@@ -33,21 +33,25 @@ public:
 	void usunGraf();
 	void zakoncz();
 
-	//algorytmy
-	void dijkstryLista();
-	void dijkstryMacierz();
+	//algorytmy MST
 	void kruskalaLista();
 	void kruskalaMacierz();
 	void primaLista();
 	void primaMacierz();
+
+	//algorytmy najkrotszej sciezki
+	void dijkstryLista();
+	void dijkstryMacierz();
 	void bellmanaFordaLista();
 	void bellmanaFordaMacierz();
 
 private:
+	//fukcje pomocnicze
 	void wypiszDroge(bool ujemnyCykl,vector<elementNajkrotszejSciezki> drogi);
 	void wypiszSciezke(elementNajkrotszejSciezki element);
 	void wypiszMST(vector<elementMinimalnegoDrzewa> wyniki, int wagaCalkowita);
 	void sortujListe(vector<list<elementListy>> &lista);
 	void sortujListe(list<elementMinimalnegoDrzewa> &lista);
+	bool znajdzCykl(elementNajkrotszejSciezki element, int wierzcholek);
 };
 

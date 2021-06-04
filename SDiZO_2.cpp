@@ -14,7 +14,7 @@ void menu() {
 
 	while (1) {  //menu glowne 
 		system("cls");
-		cout << "1.Wczytaj Graf \n2.Wyswietl \n3.Wyznaczenie minimalnego drzewa rozpinajacego \n4.Wyznaczenie najkrotszej sciezki \n5.Wyczysc graf \n6.Wyjdz" << endl;
+		cout << "Menu\n1.Wczytaj Graf \n2.Wyswietl \n3.Wyznaczenie minimalnego drzewa rozpinajacego \n4.Wyznaczenie najkrotszej sciezki \n5.Wyczysc graf \n6.Wyjdz" << endl;
 		cin >> wybor;
 		system("cls");
 
@@ -34,7 +34,7 @@ void menu() {
 			}
 			while (1) {
 				system("cls");
-				cout << "1.Reprezentacja macierzowa \n2.Reprezentacja listowa\n3.Wroc" << endl;
+				cout << "Wyswietl\n1.Reprezentacja macierzowa \n2.Reprezentacja listowa\n3.Wroc" << endl;
 				cin >> wybor;
 
 				if (wybor == 1) {
@@ -61,13 +61,13 @@ void menu() {
 			}
 			while (1) {
 				system("cls");
-				cout << "1.Algorytm Kruskala \n2.Algorytm Prima\n3.Wroc" << endl;
+				cout << "Wyznaczenie minimalnego drzewa rozpinajacego\n1.Algorytm Kruskala \n2.Algorytm Prima\n3.Wroc" << endl;
 				cin >> wybor;
 
 				if (wybor == 1) {
 					while (1) {
 						system("cls");
-						cout << "1.Listowo \n2.Macierzowo\n3.Wroc" << endl;
+						cout << "Algorytm Kruskala\n1.Listowo \n2.Macierzowo\n3.Wroc" << endl;
 						cin >> wybor;
 						if (wybor == 1) {
 							system("cls");
@@ -91,7 +91,7 @@ void menu() {
 				if (wybor == 2) {
 					while (1) {
 						system("cls");
-						cout << "1.Listowo \n2.Macierzowo\n3.Wroc" << endl;
+						cout << "Algorytm Prima\n1.Listowo \n2.Macierzowo\n3.Wroc" << endl;
 						cin >> wybor;
 						if (wybor == 1) {
 							system("cls");
@@ -126,13 +126,13 @@ void menu() {
 			}
 			while (1) {
 				system("cls");
-				cout << "1.Algorytm Dijkstry \n2.Algorytm Bellmana-Forda\n3.Wroc" << endl;
+				cout << "Wyznaczenie najkrotszej sciezki\n1.Algorytm Dijkstry \n2.Algorytm Bellmana-Forda\n3.Wroc" << endl;
 				cin >> wybor;
 
 				if (wybor == 1) {
 					while (1) {
 						system("cls");
-						cout << "1.Listowo \n2.Macierzowo\n3.Wroc" << endl;
+						cout << "Algorytm Dijkstry\n1.Listowo \n2.Macierzowo\n3.Wroc" << endl;
 						cin >> wybor;
 						if (wybor == 1) {
 							system("cls");
@@ -156,7 +156,7 @@ void menu() {
 				if (wybor == 2) {
 					while (1) {
 						system("cls");
-						cout << "1.Listowo \n2.Macierzowo\n3.Wroc" << endl;
+						cout << "Algorytm Bellmana-Forda\n1.Listowo \n2.Macierzowo\n3.Wroc" << endl;
 						cin >> wybor;
 						if (wybor == 1) {
 							system("cls");

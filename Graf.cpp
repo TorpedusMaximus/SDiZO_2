@@ -3,13 +3,15 @@
 
 using namespace std;
 
+////////////////////////////////////////graf////////////////////////////////////////
+
+
 void Graf::wczytaj(string sciezka)
 {
 	usunGraf();
 	fstream dane;//handler pliku
 	float krawedz[3];
 	elementListy temp;
-	sciezka = "test.txt";///////////////////////////////////usunac potem
 	dane.open(sciezka, fstream::in);//wczytanie pliku
 	if (!dane.is_open()) {
 		cout << "Bledna sciezka pliku" << endl;
@@ -140,102 +142,8 @@ void Graf::zakoncz()
 }
 
 
-////////////////////////////////////////algorytmy////////////////////////////////////////
+////////////////////////////////////////algorytmy MST////////////////////////////////////////
 
-
-void Graf::dijkstryLista()
-{
-	if (ujemnaWaga) {//sprawdzenie czy mozna preprowadzic algorytm
-		cout << "W grafie znajduja sie ujemne wagi";
-		return;
-	}
-
-	vector<elementNajkrotszejSciezki> droga;//drogi do wierzcholkow
-	droga.resize(liczbaWierzcholkow);
-	vector<int> zbiorWierzcholkowRozpatrzonych;//ZWR
-	float minimum;
-	int index;
-
-	droga[0].wagaDrogi = 0;//waga wierzcholka poczatkowego 
-
-	while (zbiorWierzcholkowRozpatrzonych.size() < liczbaWierzcholkow) {
-		minimum = inf;
-		for (int i = 0; i < droga.size(); i++) {//wybrnaie wierzcholka o minimalnej wadze
-			if (find(zbiorWierzcholkowRozpatrzonych.begin(), zbiorWierzcholkowRozpatrzonych.end(), i) != zbiorWierzcholkowRozpatrzonych.end()) {
-				//sprawedzenie czy wierzcholek juz byl sprawdzany
-				continue;
-			}
-			if (droga[i].wagaDrogi < minimum) {//wybranie najlepszej drogi 
-				minimum = droga[i].wagaDrogi;
-				index = i;
-			}
-		}
-		zbiorWierzcholkowRozpatrzonych.push_back(index);
-
-		for (auto& element : listaSasiadow[index]) {//relaksacja
-			if (droga[index].wagaDrogi + element.waga < droga[element.wierzcholek].wagaDrogi) {
-				droga[element.wierzcholek].poprzedniWierzcholek = index;
-				droga[element.wierzcholek].wagaDrogi = droga[index].wagaDrogi + element.waga;
-				droga[element.wierzcholek].poprzedniElement = &droga[index];
-			}
-		}
-	}
-	wyswietlListe(listaSasiadow);//wywietlenie wynikow
-	wypiszDroge(false, droga);
-
-	droga.clear();//oczyszczanie
-	droga.resize(0);
-	zbiorWierzcholkowRozpatrzonych.clear();
-	zbiorWierzcholkowRozpatrzonych.resize(0);
-}
-
-void Graf::dijkstryMacierz()
-{
-	if (ujemnaWaga) {//sprawdzenie czy mozna preprowadzic algorytm
-		cout << "W grafie znajduja sie ujemne wagi";
-		return;
-	}
-
-	vector<elementNajkrotszejSciezki> droga;//drogi do wierzcholkow
-	droga.resize(liczbaWierzcholkow);
-	vector<int> zbiorWierzcholkowRozpatrzonych;//ZWR
-	float minimum;
-	int index;
-
-	droga[0].wagaDrogi = 0;//waga wierzcholka poczatkowego 
-
-	while (zbiorWierzcholkowRozpatrzonych.size() < liczbaWierzcholkow) {
-		minimum = inf;
-		for (int i = 0; i < droga.size(); i++) {//wybrnaie wierzcholka o minimalnej wadze
-			if (find(zbiorWierzcholkowRozpatrzonych.begin(), zbiorWierzcholkowRozpatrzonych.end(), i) != zbiorWierzcholkowRozpatrzonych.end()) {
-				//sprawedzenie czy wierzcholek juz byl sprawdzany
-				continue;
-			}
-			if (droga[i].wagaDrogi < minimum) {//wybranie najlepszej drogi 
-				minimum = droga[i].wagaDrogi;
-				index = i;
-			}
-		}
-		zbiorWierzcholkowRozpatrzonych.push_back(index);
-
-		for (int i = 0; i < liczbaWierzcholkow; i++) {
-			if (macierzWag[index][i] != inf) {
-				if (droga[index].wagaDrogi + macierzWag[index][i] < droga[i].wagaDrogi) {
-					droga[i].poprzedniWierzcholek = index;
-					droga[i].wagaDrogi = droga[index].wagaDrogi + macierzWag[index][i];
-					droga[i].poprzedniElement = &droga[index];
-				}
-			}
-		}
-	}
-	wyswietlMacierz(macierzWag);//wywietlenie wynikow
-	wypiszDroge(false, droga);
-
-	droga.clear();//oczyszczanie
-	droga.resize(0);
-	zbiorWierzcholkowRozpatrzonych.clear();
-	zbiorWierzcholkowRozpatrzonych.resize(0);
-}
 
 void Graf::kruskalaLista()
 {
@@ -484,105 +392,176 @@ void Graf::primaMacierz()
 	macierzPrima.resize(0);
 }
 
+
+////////////////////////////////////////algorytmy najkrotszej sciezki////////////////////////////////////////
+
+
+void Graf::dijkstryLista()
+{
+	if (ujemnaWaga) {//sprawdzenie czy mozna preprowadzic algorytm
+		cout << "W grafie znajduja sie ujemne wagi";
+		return;
+	}
+
+	vector<elementNajkrotszejSciezki> droga;//drogi do wierzcholkow
+	droga.resize(liczbaWierzcholkow);
+	vector<int> zbiorWierzcholkowRozpatrzonych;//ZWR
+	float minimum;
+	int index;
+
+	droga[0].wagaDrogi = 0;//waga wierzcholka poczatkowego 
+
+	while (zbiorWierzcholkowRozpatrzonych.size() < liczbaWierzcholkow) {
+		minimum = inf;
+		for (int i = 0; i < droga.size(); i++) {//wybrnaie wierzcholka o minimalnej wadze
+			if (find(zbiorWierzcholkowRozpatrzonych.begin(), zbiorWierzcholkowRozpatrzonych.end(), i) != zbiorWierzcholkowRozpatrzonych.end()) {
+				//sprawedzenie czy wierzcholek juz byl sprawdzany
+				continue;
+			}
+			if (droga[i].wagaDrogi < minimum) {//wybranie najlepszej drogi 
+				minimum = droga[i].wagaDrogi;
+				index = i;
+			}
+		}
+		zbiorWierzcholkowRozpatrzonych.push_back(index);
+
+		for (auto& element : listaSasiadow[index]) {//relaksacja
+			if (droga[index].wagaDrogi + element.waga < droga[element.wierzcholek].wagaDrogi) {
+				droga[element.wierzcholek].poprzedniWierzcholek = index;
+				droga[element.wierzcholek].wagaDrogi = droga[index].wagaDrogi + element.waga;
+				droga[element.wierzcholek].poprzedniElement = &droga[index];
+			}
+		}
+	}
+	wyswietlListe(listaSasiadow);//wywietlenie wynikow
+	wypiszDroge(false, droga);
+
+	droga.clear();//oczyszczanie
+	droga.resize(0);
+	zbiorWierzcholkowRozpatrzonych.clear();
+	zbiorWierzcholkowRozpatrzonych.resize(0);
+}
+
+void Graf::dijkstryMacierz()
+{
+	if (ujemnaWaga) {//sprawdzenie czy mozna preprowadzic algorytm
+		cout << "W grafie znajduja sie ujemne wagi";
+		return;
+	}
+
+	vector<elementNajkrotszejSciezki> droga;//drogi do wierzcholkow
+	droga.resize(liczbaWierzcholkow);
+	vector<int> zbiorWierzcholkowRozpatrzonych;//ZWR
+	float minimum;
+	int index;
+
+	droga[0].wagaDrogi = 0;//waga wierzcholka poczatkowego 
+
+	while (zbiorWierzcholkowRozpatrzonych.size() < liczbaWierzcholkow) {
+		minimum = inf;
+		for (int i = 0; i < droga.size(); i++) {//wybrnaie wierzcholka o minimalnej wadze
+			if (find(zbiorWierzcholkowRozpatrzonych.begin(), zbiorWierzcholkowRozpatrzonych.end(), i) != zbiorWierzcholkowRozpatrzonych.end()) {
+				//sprawedzenie czy wierzcholek juz byl sprawdzany
+				continue;
+			}
+			if (droga[i].wagaDrogi < minimum) {//wybranie najlepszej drogi 
+				minimum = droga[i].wagaDrogi;
+				index = i;
+			}
+		}
+		zbiorWierzcholkowRozpatrzonych.push_back(index);
+
+		for (int i = 0; i < liczbaWierzcholkow; i++) {
+			if (macierzWag[index][i] != inf) {
+				if (droga[index].wagaDrogi + macierzWag[index][i] < droga[i].wagaDrogi) {
+					droga[i].poprzedniWierzcholek = index;
+					droga[i].wagaDrogi = droga[index].wagaDrogi + macierzWag[index][i];
+					droga[i].poprzedniElement = &droga[index];
+				}
+			}
+		}
+	}
+	wyswietlMacierz(macierzWag);//wywietlenie wynikow
+	wypiszDroge(false, droga);
+
+	droga.clear();//oczyszczanie
+	droga.resize(0);
+	zbiorWierzcholkowRozpatrzonych.clear();
+	zbiorWierzcholkowRozpatrzonych.resize(0);
+}
+
 void Graf::bellmanaFordaLista()
 {
-//	bool ujemnyCykl = false;//sprawdzenie istnienia ujemnego cyklu
-//	deque<int> kolejkaWierzcholkow;//kolejka wierzcholkow do sprawdzenia
-//	vector<elementNajkrotszejSciezki> droga(liczbaWierzcholkow);//droga do wierzcholka
-//	vector<int> historiaKolejki;
-//
-//	droga[wierzcholekPoczatkowy].sciezka.push_back(wierzcholekPoczatkowy);//ustalenie drogi do wierzcholka startowego
-//	droga[wierzcholekPoczatkowy].wagaDrogi = 0;
-//	kolejkaWierzcholkow.push_back(wierzcholekPoczatkowy);
-//
-//	while (kolejkaWierzcholkow.size() > 0 && !ujemnyCykl) {  //petla sprawdza wsystkie wierzcholki lub konczy w momenci wykrycia ujemnego cyklu 
-//		int badanyElement = kolejkaWierzcholkow.front();//pobranie wierzcholka do badania
-//		kolejkaWierzcholkow.pop_front();
-//		historiaKolejki.push_back(badanyElement);
-//
-//		for (auto& element : listaSasiadow[badanyElement]) {
-//			if (droga[badanyElement].wagaDrogi + element.waga < droga[element.wierzcholek].wagaDrogi) {//zmiana drogi w zaleznosci od wagi 
-//				ujemnyCykl = (find(droga[badanyElement].sciezka.begin(), droga[badanyElement].sciezka.end(), element.wierzcholek) != droga[badanyElement].sciezka.end());//sprawdzenie ujemnego cyklu
-//				if (ujemnyCykl) {
-//					break;  
-//				}
-//
-//				droga[element.wierzcholek].sciezka = droga[badanyElement].sciezka;//zamiana sciezki na korzystniejsza
-//				droga[element.wierzcholek].sciezka.push_back(element.wierzcholek);
-//				droga[element.wierzcholek].wagaDrogi = droga[badanyElement].wagaDrogi + element.waga;
-//
-//				if (kolejkaWierzcholkow.empty() || find(kolejkaWierzcholkow.begin(), kolejkaWierzcholkow.end(), element.wierzcholek) == kolejkaWierzcholkow.end()) {//dodanie wierzcholka do drogi, lub zamienienie jego kolejnosci jak juz w niej byl
-//					if (find(historiaKolejki.begin(), historiaKolejki.end(), element.wierzcholek) == historiaKolejki.end()) {
-//						kolejkaWierzcholkow.push_back(element.wierzcholek);
-//						historiaKolejki.push_back(element.wierzcholek);
-//					}
-//					else {
-//						kolejkaWierzcholkow.push_front(element.wierzcholek);
-//					}
-//				}
-//			}
-//		}
-//	}
-//	wyswietlListe(listaSasiadow);
-//	wypiszDroge(ujemnyCykl, droga);//wypisanie wyniku
-//
-//	kolejkaWierzcholkow.clear();//oczyszczenie struktur pomocniczych
-//	droga.clear();
-//	historiaKolejki.clear();
-//	kolejkaWierzcholkow.resize(0);//usuniecie strutur pomocniczych
-//	droga.resize(0);
-//	historiaKolejki.resize(0);
+	bool ujemnyCykl=false;
+	vector<elementNajkrotszejSciezki> droga;//drogi do wierzcholkow
+	droga.resize(liczbaWierzcholkow);
+	vector<int> zbiorWierzcholkowRozpatrzonych;//ZWR
+	float minimum;
+	int index;
+
+	droga[0].wagaDrogi = 0;//waga wierzcholka poczatkowego 
+
+
+	for (int i = 0; i < liczbaWierzcholkow - 1; i++) {
+		for (auto& element : listaSasiadow[i]) {
+			ujemnyCykl = znajdzCykl(droga[i], i);//sprawdzenie ujemnego cyklu
+			if (ujemnyCykl) {
+				break;
+			}
+			if (droga[i].wagaDrogi + element.waga < droga[element.wierzcholek].wagaDrogi) {
+				droga[element.wierzcholek].wagaDrogi = droga[i].wagaDrogi + element.waga;//relaksacja
+				droga[element.wierzcholek].poprzedniWierzcholek = i;
+				droga[element.wierzcholek].poprzedniElement = &droga[i];
+			}
+		}
+		if (ujemnyCykl) {
+			break;
+		}
+	}
+	wyswietlListe(listaSasiadow);//wywietlenie wynikow
+	wypiszDroge(ujemnyCykl, droga);
+
+	droga.clear();//oczyszczanie
+	droga.resize(0);
+	zbiorWierzcholkowRozpatrzonych.clear();
+	zbiorWierzcholkowRozpatrzonych.resize(0);
 }
 
 void Graf::bellmanaFordaMacierz()
 {
-	//bool ujemnyCykl = false;//sprawdzenie istnienia ujemnego cyklu
-	//deque<int> kolejkaWierzcholkow;//kolejka wierzcholkow do sprawdzenia
-	//vector<elementNajkrotszejSciezki> droga(liczbaWierzcholkow);//droga do wierzcholka
-	//vector<int> historiaKolejki;
+	bool ujemnyCykl = false;
+	vector<elementNajkrotszejSciezki> droga;//drogi do wierzcholkow
+	droga.resize(liczbaWierzcholkow);
+	vector<int> zbiorWierzcholkowRozpatrzonych;//ZWR
+	float minimum;
+	int index;
 
-	//droga[wierzcholekPoczatkowy].sciezka.push_back(wierzcholekPoczatkowy);//ustalenie drogi do wierzcholka startowego
-	//droga[wierzcholekPoczatkowy].wagaDrogi = 0;
-	//kolejkaWierzcholkow.push_back(wierzcholekPoczatkowy);
+	droga[0].wagaDrogi = 0;//waga wierzcholka poczatkowego 
 
-	//while (kolejkaWierzcholkow.size() > 0 && !ujemnyCykl) { //petla sprawdza wsystkie wierzcholki lub konczy w momenci wykrycia ujemnego cyklu 
-	//	int badanyElement = kolejkaWierzcholkow.front();//pobranie wierzcholka do badania
-	//	kolejkaWierzcholkow.pop_front();
-	//	historiaKolejki.push_back(badanyElement);
 
-	//	for (int i = 0; i < liczbaWierzcholkow; i++) {
-	//		if (droga[badanyElement].wagaDrogi + macierzWag[badanyElement][i] < droga[i].wagaDrogi) {
-	//			ujemnyCykl = (find(droga[badanyElement].sciezka.begin(), droga[badanyElement].sciezka.end(), i) != droga[badanyElement].sciezka.end());//sprawdzenie ujemnego cyklu
-	//			if (ujemnyCykl) {
-	//				break;
-	//			}
+	for (int i = 0; i < liczbaWierzcholkow ; i++) {
+		for (int j = 0; j < liczbaWierzcholkow ; j++) {
+			ujemnyCykl = znajdzCykl(droga[i], i);//sprawdzenie ujemnego cyklu
+			if (ujemnyCykl) {
+				break;
+			}
+			if (droga[i].wagaDrogi + macierzWag[i][j] < droga[j].wagaDrogi) {
+				droga[j].wagaDrogi = droga[i].wagaDrogi + macierzWag[i][j];//relaksacja
+				droga[j].poprzedniWierzcholek = i;
+				droga[j].poprzedniElement = &droga[i];
+			}
+		}
+		if (ujemnyCykl) {
+			break;
+		}
+	}
+	wyswietlMacierz(macierzWag);//wywietlenie wynikow
+	wypiszDroge(ujemnyCykl, droga);
 
-	//			droga[i].sciezka = droga[badanyElement].sciezka;//zamiana sciezki na korzystniejsza
-	//			droga[i].sciezka.push_back(i);
-	//			droga[i].wagaDrogi = droga[badanyElement].wagaDrogi + macierzWag[badanyElement][i];
-
-	//			if (kolejkaWierzcholkow.empty() || find(kolejkaWierzcholkow.begin(), kolejkaWierzcholkow.end(), i) == kolejkaWierzcholkow.end()) {
-
-	//				if (find(historiaKolejki.begin(), historiaKolejki.end(), i) == historiaKolejki.end()) {//dodanie wierzcholka do drogi, lub zamienienie jego kolejnosci jak juz w niej byl
-	//					kolejkaWierzcholkow.push_back(i);
-	//					historiaKolejki.push_back(i);
-	//				}
-	//				else {
-	//					kolejkaWierzcholkow.push_front(i);
-	//				}
-	//			}
-	//		}
-	//	}
-	//}
-	//wyswietlMacierz(macierzWag);
-	//wypiszDroge(ujemnyCykl, droga);//wypisanie wyniku
-
-	//kolejkaWierzcholkow.clear();//oczyszczenie struktur pomocniczych
-	//droga.clear();
-	//historiaKolejki.clear();
-	//kolejkaWierzcholkow.resize(0);//usuniecie strutur pomocniczych
-	//droga.resize(0);
-	//historiaKolejki.resize(0);
+	droga.clear();//oczyszczanie
+	droga.resize(0);
+	zbiorWierzcholkowRozpatrzonych.clear();
+	zbiorWierzcholkowRozpatrzonych.resize(0);
 }
 
 
@@ -643,4 +622,18 @@ void Graf::sortujListe(list<elementMinimalnegoDrzewa> &lista)
 	lista.sort([](const elementMinimalnegoDrzewa& a, const elementMinimalnegoDrzewa& b) {
 		return a.waga < b.waga;
 		});
+}
+
+bool Graf::znajdzCykl(elementNajkrotszejSciezki element, int wierzcholek)
+{
+	if (element.poprzedniWierzcholek == -1) {
+		return false;
+	}
+	else {
+		if (element.poprzedniWierzcholek==wierzcholek) {
+			return true;
+		}
+		znajdzCykl(*element.poprzedniElement,wierzcholek);
+	}
+	
 }
