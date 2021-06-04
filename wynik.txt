@@ -102,3 +102,32 @@ wczytanie 7860 us
 
 wczytanie 581 us
 wczytanie 554 us
+
+wczytanie 590 us
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

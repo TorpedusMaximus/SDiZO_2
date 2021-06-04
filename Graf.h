@@ -24,6 +24,7 @@ public:
 	float inf = numeric_limits<float>::infinity();
 	vector<list<elementListy>> listaSasiadow; 
 	vector<vector<float>> macierzWag;
+	bool ujemnaWaga;
 	
 	//zarzadzanie grafem
 	void wczytaj(string sciezka);
@@ -44,6 +45,7 @@ public:
 
 private:
 	void wypiszDroge(bool ujemnyCykl,vector<elementNajkrotszejSciezki> drogi);
+	void wypiszSciezke(elementNajkrotszejSciezki element);
 	void wypiszMST(vector<elementMinimalnegoDrzewa> wyniki, int wagaCalkowita);
 	void sortujListe(vector<list<elementListy>> &lista);
 	void sortujListe(list<elementMinimalnegoDrzewa> &lista);
