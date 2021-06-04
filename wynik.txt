@@ -92,3 +92,13 @@ wczytanie 1268 us
 wczytanie 540 us
 
 wczytanie 611 us
+
+wczytanie 1652 us
+
+wczytanie 619 us
+
+wczytanie 790 us
+wczytanie 7860 us
+
+wczytanie 581 us
+wczytanie 554 us

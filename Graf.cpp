@@ -139,8 +139,8 @@ void Graf::zakoncz()
 }
 
 
-
 ////////////////////////////////////////algorytmy////////////////////////////////////////
+
 
 void Graf::dijkstryLista()
 {
@@ -155,86 +155,134 @@ void Graf::dijkstryMacierz()
 
 void Graf::kruskalaLista()
 {
-	vector<list<elementListy>> listaKruskala=listaSasiadow;
-	sortujListe(listaKruskala);
-	list<elementMinimalnegoDrzewa> krawedzie;
+	list<elementMinimalnegoDrzewa> krawedzie;//zbior krawedzi
 	float minimum = inf;
 	int index=0;
-	elementMinimalnegoDrzewa element;
+	elementMinimalnegoDrzewa elementMST;//zmienna pomocnicza
 	vector<elementMinimalnegoDrzewa> wyniki;//struktura prechowujaca wyniki
 	float wagaCalkowita = 0;
-	vector<vector<int>>zbiorWierzcholkowRozpatrzonych;
+	vector<vector<int>>zbiorWierzcholkowRozpatrzonych;//ZWR
 	zbiorWierzcholkowRozpatrzonych.resize(liczbaWierzcholkow);
 
-	for (int i = 0; i < liczbaKrawedzi; i++) {
-		minimum = inf;
-		for (int j = 0; j < liczbaWierzcholkow; j++) {
-			if (listaKruskala[j].size() > 0) {
-				if (listaKruskala[j].front().waga < minimum) {
-					minimum = listaKruskala[j].front().waga;
-					index = j;
-				}
-			}
+	for (int i = 0; i < liczbaWierzcholkow; i++) {//pobranie krawedzi z listy sasiedztwa
+		for (auto& element : listaSasiadow[i]) {
+			elementMST.wierzcholekA = i;
+			elementMST.wierzcholekB = element.wierzcholek;
+			elementMST.waga = element.waga;
+			krawedzie.push_back(elementMST);
 		}
-		element.waga = minimum;
-		element.wierzcholekA = index;
-		element.wierzcholekB = listaKruskala[index].front().wierzcholek;
-		krawedzie.push_back(element);
-		listaKruskala[index].pop_front();
 	}
-	listaKruskala.clear();
-	listaKruskala.resize(0);
-
-	for (int i = 0; i < liczbaWierzcholkow; i++) {
+	for (int i = 0; i < liczbaWierzcholkow; i++) {//generownie podrzew z pojedynczych wierzcholkow
 		zbiorWierzcholkowRozpatrzonych[i].push_back(i);
 	}
-
+	
+	sortujListe(krawedzie);//sortowanie krawedzi
 	wyswietlListe(listaSasiadow);
-
 	vector<int>::iterator flagaA, flagaB;
-	int indexA, indexB;   //////////////////naprawic
+	int indexA, indexB;  
+
 	while (krawedzie.size()) {
-		element = krawedzie.front();
+		elementMST = krawedzie.front();//pobranie krawedzi z listy 
 		krawedzie.pop_front();
 		
-		
-		for (int i = 0; i < zbiorWierzcholkowRozpatrzonych.size(); i++) {
-			flagaA =find(zbiorWierzcholkowRozpatrzonych[i].begin(), zbiorWierzcholkowRozpatrzonych[i].end(), element.wierzcholekA);
+		for (int i = 0; i < zbiorWierzcholkowRozpatrzonych.size(); i++) {//wyszukanie poddrzewa z poszukiwanych wierzcholkiem
+			flagaA =find(zbiorWierzcholkowRozpatrzonych[i].begin(), zbiorWierzcholkowRozpatrzonych[i].end(), elementMST.wierzcholekA);
 			if (flagaA!= zbiorWierzcholkowRozpatrzonych[i].end()) {
 				indexA = i;
 				break;
 			}
 		}
-		for (int i = 0; i < zbiorWierzcholkowRozpatrzonych.size(); i++) {
-			flagaB=find(zbiorWierzcholkowRozpatrzonych[i].begin(), zbiorWierzcholkowRozpatrzonych[i].end(), element.wierzcholekB);
+		for (int i = 0; i < zbiorWierzcholkowRozpatrzonych.size(); i++) {//wyszukanie poddrzewa z poszukiwanych wierzcholkiem
+			flagaB=find(zbiorWierzcholkowRozpatrzonych[i].begin(), zbiorWierzcholkowRozpatrzonych[i].end(), elementMST.wierzcholekB);
 			if (flagaB != zbiorWierzcholkowRozpatrzonych[i].end()){
 				indexB = i;
 				break;
 			}
 		}
-		if (indexA != indexB) {
-			wyniki.push_back(element);
-			zbiorWierzcholkowRozpatrzonych[indexA].assign(zbiorWierzcholkowRozpatrzonych[indexB].begin(), zbiorWierzcholkowRozpatrzonych[indexB].end());
+		if (indexA != indexB) {//sprawdzenie czy oba wierzcholki juz znajduja sie w jednym podrzewie
+			wyniki.push_back(elementMST);//dodanie krwaedzi do poddrzewa
+			for (int i = 0; i < zbiorWierzcholkowRozpatrzonych[indexB].size();i++) {//polaczenie poddrzew
+				zbiorWierzcholkowRozpatrzonych[indexA].push_back(zbiorWierzcholkowRozpatrzonych[indexB][i]);
+			}
 			zbiorWierzcholkowRozpatrzonych.erase(zbiorWierzcholkowRozpatrzonych.begin()+indexB);
-			wagaCalkowita += element.waga;
+			wagaCalkowita += elementMST.waga;//zwiekszenie calkowitem wagi
 		}
-
 	}
+	wypiszMST(wyniki, wagaCalkowita);
 	
-	wypiszPrima(wyniki, wagaCalkowita);
-	
-	wyniki.clear();
+	wyniki.clear();//oczyszczenie
 	wyniki.resize(0);
 	zbiorWierzcholkowRozpatrzonych.clear();
 	zbiorWierzcholkowRozpatrzonych.resize(0);
 	krawedzie.clear();
 	krawedzie.resize(0);
-
 }
 
 void Graf::kruskalaMacierz()
 {
-	
+	list<elementMinimalnegoDrzewa> krawedzie;//zbior krawedzi
+	float minimum = inf;
+	int index = 0;
+	elementMinimalnegoDrzewa elementMST;//zmienna pomocnicza
+	vector<elementMinimalnegoDrzewa> wyniki;//struktura prechowujaca wyniki
+	float wagaCalkowita = 0;
+	vector<vector<int>>zbiorWierzcholkowRozpatrzonych;//ZWR
+	zbiorWierzcholkowRozpatrzonych.resize(liczbaWierzcholkow);
+
+	for (int i = 0; i < liczbaWierzcholkow; i++) {//pobranie krawedzi z listy sasiedztwa
+		for (int j = 0; j < liczbaWierzcholkow; j++) {
+			if (macierzWag[i][j] != inf) {
+				elementMST.wierzcholekA = i;
+				elementMST.wierzcholekB = j;
+				elementMST.waga = macierzWag[i][j];
+				krawedzie.push_back(elementMST);
+			}
+		}
+	}
+	for (int i = 0; i < liczbaWierzcholkow; i++) {//generownie podrzew z pojedynczych wierzcholkow
+		zbiorWierzcholkowRozpatrzonych[i].push_back(i);
+	}
+
+	sortujListe(krawedzie);//sortowanie krawedzi
+	wyswietlMacierz(macierzWag);
+	vector<int>::iterator flagaA, flagaB;
+	int indexA, indexB;
+
+	while (krawedzie.size()) {
+		elementMST = krawedzie.front();//pobranie krawedzi z listy 
+		krawedzie.pop_front();
+
+		for (int i = 0; i < zbiorWierzcholkowRozpatrzonych.size(); i++) {//wyszukanie poddrzewa z poszukiwanych wierzcholkiem
+			flagaA = find(zbiorWierzcholkowRozpatrzonych[i].begin(), zbiorWierzcholkowRozpatrzonych[i].end(), elementMST.wierzcholekA);
+			if (flagaA != zbiorWierzcholkowRozpatrzonych[i].end()) {
+				indexA = i;
+				break;
+			}
+		}
+		for (int i = 0; i < zbiorWierzcholkowRozpatrzonych.size(); i++) {//wyszukanie poddrzewa z poszukiwanych wierzcholkiem
+			flagaB = find(zbiorWierzcholkowRozpatrzonych[i].begin(), zbiorWierzcholkowRozpatrzonych[i].end(), elementMST.wierzcholekB);
+			if (flagaB != zbiorWierzcholkowRozpatrzonych[i].end()) {
+				indexB = i;
+				break;
+			}
+		}
+		if (indexA != indexB) {//sprawdzenie czy oba wierzcholki juz znajduja sie w jednym podrzewie
+			wyniki.push_back(elementMST);//dodanie krwaedzi do poddrzewa
+			for (int i = 0; i < zbiorWierzcholkowRozpatrzonych[indexB].size(); i++) {//polaczenie poddrzew
+				zbiorWierzcholkowRozpatrzonych[indexA].push_back(zbiorWierzcholkowRozpatrzonych[indexB][i]);
+			}
+			zbiorWierzcholkowRozpatrzonych.erase(zbiorWierzcholkowRozpatrzonych.begin() + indexB);
+			wagaCalkowita += elementMST.waga;//zwiekszenie calkowitem wagi
+		}
+	}
+	wypiszMST(wyniki, wagaCalkowita);
+
+	wyniki.clear();//oczyszczenie
+	wyniki.resize(0);
+	zbiorWierzcholkowRozpatrzonych.clear();
+	zbiorWierzcholkowRozpatrzonych.resize(0);
+	krawedzie.clear();
+	krawedzie.resize(0);	
 }
 
 void Graf::primaLista()
@@ -285,7 +333,7 @@ void Graf::primaLista()
 		wyniki[i].waga = minimum;
 	}
 	wyswietlListe(listaPrima);
-	wypiszPrima(wyniki, wagaCalkowita);
+	wypiszMST(wyniki, wagaCalkowita);
 	
 	zbiorWierzcholkowRozpatrzonych.clear();//czyszczenie 
 	wyniki.clear();
@@ -342,7 +390,7 @@ void Graf::primaMacierz()
 		wyniki[i].waga = minimum;
 	}
 	wyswietlMacierz(macierzPrima);
-	wypiszPrima(wyniki, wagaCalkowita);
+	wypiszMST(wyniki, wagaCalkowita);
 
 	zbiorWierzcholkowRozpatrzonych.clear();//czyszczenie 
 	wyniki.clear();
@@ -392,7 +440,7 @@ void Graf::bellmanaFordaLista()
 		}
 	}
 	wyswietlListe(listaSasiadow);
-	wypiszBelmanaForda(ujemnyCykl, droga);//wypisanie wyniku
+	wypiszDroge(ujemnyCykl, droga);//wypisanie wyniku
 
 	kolejkaWierzcholkow.clear();//oczyszczenie struktur pomocniczych
 	droga.clear();
@@ -443,7 +491,7 @@ void Graf::bellmanaFordaMacierz()
 		}
 	}
 	wyswietlMacierz(macierzWag);
-	wypiszBelmanaForda(ujemnyCykl, droga);//wypisanie wyniku
+	wypiszDroge(ujemnyCykl, droga);//wypisanie wyniku
 
 	kolejkaWierzcholkow.clear();//oczyszczenie struktur pomocniczych
 	droga.clear();
@@ -457,12 +505,12 @@ void Graf::bellmanaFordaMacierz()
 ////////////////////////////////////////pomocnicze////////////////////////////////////////
 
 
-void Graf::wypiszBelmanaForda(bool ujemnyCykl, vector<elementNajkrotszejSciezki> droga) {
+void Graf::wypiszDroge(bool ujemnyCykl, vector<elementNajkrotszejSciezki> droga) {
 	if (ujemnyCykl) {//sprawdzenie istnienai ujemnego cyklu
 		cout <<endl<< "Cykl ujemny" << endl;
 	}
 	else {
-		cout <<endl<< "koniec : wartosc drogi : droga" << endl;
+		cout <<endl<< "Koniec : Wartosc drogi : Droga" << endl;
 
 		for (int a = 0; a < (int)droga.size(); a++) {//wyswietlenie wag i drog 
 			cout << a << " : " << droga[a].wagaDrogi << " : ";
@@ -481,9 +529,9 @@ void Graf::wypiszBelmanaForda(bool ujemnyCykl, vector<elementNajkrotszejSciezki>
 
 }
 
-void Graf::wypiszPrima(vector<elementMinimalnegoDrzewa> wyniki, int wagaCalkowita)
+void Graf::wypiszMST(vector<elementMinimalnegoDrzewa> wyniki, int wagaCalkowita)
 {
-	cout <<endl<<"wierzcholki : waga" << endl;
+	cout <<endl<<"Wierzcholki : Waga" << endl;
 	for (int i = 0; i < wyniki.size(); i++) {
 		cout << wyniki[i].wierzcholekA << " -> " << wyniki[i].wierzcholekB << " : " << wyniki[i].waga << endl;
 	}
@@ -497,4 +545,11 @@ void Graf::sortujListe(vector<list<elementListy>> &lista)
 			return a.waga < b.waga;
 			});
 	}
+}
+
+void Graf::sortujListe(list<elementMinimalnegoDrzewa> &lista)
+{
+	lista.sort([](const elementMinimalnegoDrzewa& a, const elementMinimalnegoDrzewa& b) {
+		return a.waga < b.waga;
+		});
 }

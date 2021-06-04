@@ -43,8 +43,9 @@ public:
 	void bellmanaFordaMacierz();
 
 private:
-	void wypiszBelmanaForda(bool ujemnyCykl,vector<elementNajkrotszejSciezki> drogi);
-	void wypiszPrima(vector<elementMinimalnegoDrzewa> wyniki, int wagaCalkowita);
+	void wypiszDroge(bool ujemnyCykl,vector<elementNajkrotszejSciezki> drogi);
+	void wypiszMST(vector<elementMinimalnegoDrzewa> wyniki, int wagaCalkowita);
 	void sortujListe(vector<list<elementListy>> &lista);
+	void sortujListe(list<elementMinimalnegoDrzewa> &lista);
 };
 
