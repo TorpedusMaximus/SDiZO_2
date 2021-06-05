@@ -21,7 +21,10 @@ void menu() {
 		switch (wybor) {
 		case 1:
 			cout << "Podaj sciezke pliku" << endl;
-			//cin >> sciezka;
+			cin >> sciezka;
+			if (sciezka.find(".txt") == string::npos) {
+				sciezka = sciezka + ".txt";
+			}
 			graf.wczytaj(sciezka);
 			_getch();
 			break;

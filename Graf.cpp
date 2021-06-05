@@ -118,11 +118,6 @@ void Graf::usunGraf()
 	macierzWag.clear();//czyszczenie i usuwanie macierzy wag
 	macierzWag.resize(0);
 
-	for (int i = 0; i < (int)listaSasiadow.size(); i++) { //czyszczenie listy krawêdzi przy wierzcho³ku i
-		listaSasiadow[i].clear();
-		listaSasiadow[i].resize(0);
-	}
-
 	listaSasiadow.clear();//czyszczenie listy wierzcho³ków
 	listaSasiadow.resize(0);
 
@@ -201,13 +196,6 @@ void Graf::kruskalaLista()
 		}
 	}
 	wypiszMST(wyniki, wagaCalkowita);
-	
-	wyniki.clear();//oczyszczenie
-	wyniki.resize(0);
-	zbiorWierzcholkowRozpatrzonych.clear();
-	zbiorWierzcholkowRozpatrzonych.resize(0);
-	krawedzie.clear();
-	krawedzie.resize(0);
 }
 
 void Graf::kruskalaMacierz()
@@ -268,13 +256,6 @@ void Graf::kruskalaMacierz()
 		}
 	}
 	wypiszMST(wyniki, wagaCalkowita);
-
-	wyniki.clear();//oczyszczenie
-	wyniki.resize(0);
-	zbiorWierzcholkowRozpatrzonych.clear();
-	zbiorWierzcholkowRozpatrzonych.resize(0);
-	krawedzie.clear();
-	krawedzie.resize(0);	
 }
 
 void Graf::primaLista()
@@ -326,13 +307,6 @@ void Graf::primaLista()
 	}
 	wyswietlListe(listaPrima);
 	wypiszMST(wyniki, wagaCalkowita);
-	
-	zbiorWierzcholkowRozpatrzonych.clear();//czyszczenie 
-	wyniki.clear();
-	listaPrima.clear();
-	zbiorWierzcholkowRozpatrzonych.resize(0);
-	wyniki.resize(0);
-	listaPrima.resize(0);
 }
 
 void Graf::primaMacierz()
@@ -383,13 +357,6 @@ void Graf::primaMacierz()
 	}
 	wyswietlMacierz(macierzPrima);
 	wypiszMST(wyniki, wagaCalkowita);
-
-	zbiorWierzcholkowRozpatrzonych.clear();//czyszczenie 
-	wyniki.clear();
-	macierzPrima.clear();
-	zbiorWierzcholkowRozpatrzonych.resize(0);
-	wyniki.resize(0);
-	macierzPrima.resize(0);
 }
 
 
@@ -399,7 +366,7 @@ void Graf::primaMacierz()
 void Graf::dijkstryLista()
 {
 	if (ujemnaWaga) {//sprawdzenie czy mozna preprowadzic algorytm
-		cout << "W grafie znajduja sie ujemne wagi";
+		cout << "W grafie znajduja sie ujemne wagi" << endl;
 		return;
 	}
 
@@ -435,17 +402,12 @@ void Graf::dijkstryLista()
 	}
 	wyswietlListe(listaSasiadow);//wywietlenie wynikow
 	wypiszDroge(false, droga);
-
-	droga.clear();//oczyszczanie
-	droga.resize(0);
-	zbiorWierzcholkowRozpatrzonych.clear();
-	zbiorWierzcholkowRozpatrzonych.resize(0);
 }
 
 void Graf::dijkstryMacierz()
 {
 	if (ujemnaWaga) {//sprawdzenie czy mozna preprowadzic algorytm
-		cout << "W grafie znajduja sie ujemne wagi";
+		cout << "W grafie znajduja sie ujemne wagi" << endl;
 		return;
 	}
 
@@ -483,11 +445,6 @@ void Graf::dijkstryMacierz()
 	}
 	wyswietlMacierz(macierzWag);//wywietlenie wynikow
 	wypiszDroge(false, droga);
-
-	droga.clear();//oczyszczanie
-	droga.resize(0);
-	zbiorWierzcholkowRozpatrzonych.clear();
-	zbiorWierzcholkowRozpatrzonych.resize(0);
 }
 
 void Graf::bellmanaFordaLista()
@@ -498,33 +455,31 @@ void Graf::bellmanaFordaLista()
 	vector<int> zbiorWierzcholkowRozpatrzonych;//ZWR
 	float minimum;
 	int index;
+	bool relaksacja;
 
 	droga[0].wagaDrogi = 0;//waga wierzcholka poczatkowego 
 
-
-	for (int i = 0; i < liczbaWierzcholkow - 1; i++) {
-		for (auto& element : listaSasiadow[i]) {
-			ujemnyCykl = znajdzCykl(droga[i], i);//sprawdzenie ujemnego cyklu
-			if (ujemnyCykl) {
-				break;
+	for (int j = 0; j < liczbaKrawedzi - 1; j++) {
+		relaksacja = false;
+		for (int i = 0; i < liczbaWierzcholkow ; i++) {
+			for (auto& element : listaSasiadow[i]) {
+				if (droga[i].wagaDrogi + element.waga < droga[element.wierzcholek].wagaDrogi) {
+					droga[element.wierzcholek].wagaDrogi = droga[i].wagaDrogi + element.waga;//relaksacja
+					droga[element.wierzcholek].poprzedniWierzcholek = i;
+					droga[element.wierzcholek].poprzedniElement = &droga[i];
+					relaksacja = true;
+				}
 			}
-			if (droga[i].wagaDrogi + element.waga < droga[element.wierzcholek].wagaDrogi) {
-				droga[element.wierzcholek].wagaDrogi = droga[i].wagaDrogi + element.waga;//relaksacja
-				droga[element.wierzcholek].poprzedniWierzcholek = i;
-				droga[element.wierzcholek].poprzedniElement = &droga[i];
+			if (!ujemnyCykl) {
+				ujemnyCykl = znajdzCykl(droga[i], i);//sprawdzenie ujemnego cykl
 			}
 		}
-		if (ujemnyCykl) {
-			break;
+		if (!relaksacja) {
+			//break;
 		}
 	}
 	wyswietlListe(listaSasiadow);//wywietlenie wynikow
 	wypiszDroge(ujemnyCykl, droga);
-
-	droga.clear();//oczyszczanie
-	droga.resize(0);
-	zbiorWierzcholkowRozpatrzonych.clear();
-	zbiorWierzcholkowRozpatrzonych.resize(0);
 }
 
 void Graf::bellmanaFordaMacierz()
@@ -535,33 +490,33 @@ void Graf::bellmanaFordaMacierz()
 	vector<int> zbiorWierzcholkowRozpatrzonych;//ZWR
 	float minimum;
 	int index;
+	bool relaksacja;
 
 	droga[0].wagaDrogi = 0;//waga wierzcholka poczatkowego 
 
-
-	for (int i = 0; i < liczbaWierzcholkow ; i++) {
-		for (int j = 0; j < liczbaWierzcholkow ; j++) {
-			ujemnyCykl = znajdzCykl(droga[i], i);//sprawdzenie ujemnego cyklu
-			if (ujemnyCykl) {
-				break;
+	for (int glowny = 0; glowny < liczbaKrawedzi - 1; glowny++) {
+		relaksacja = false;
+		for (int index = 0; index < liczbaWierzcholkow; index++) {
+			for (int i = 0; i < liczbaWierzcholkow; i++) {
+				if (macierzWag[index][i] != inf) {
+					if (droga[index].wagaDrogi + macierzWag[index][i] < droga[i].wagaDrogi) {
+						droga[i].poprzedniWierzcholek = index;
+						droga[i].wagaDrogi = droga[index].wagaDrogi + macierzWag[index][i];
+						droga[i].poprzedniElement = &droga[index];
+						relaksacja = true;
+					}
+				}
 			}
-			if (droga[i].wagaDrogi + macierzWag[i][j] < droga[j].wagaDrogi) {
-				droga[j].wagaDrogi = droga[i].wagaDrogi + macierzWag[i][j];//relaksacja
-				droga[j].poprzedniWierzcholek = i;
-				droga[j].poprzedniElement = &droga[i];
+			if (!ujemnyCykl) {
+				ujemnyCykl = znajdzCykl(droga[index], index);//sprawdzenie ujemnego cykl
 			}
 		}
-		if (ujemnyCykl) {
-			break;
+		if (!relaksacja) {
+			//break;
 		}
 	}
 	wyswietlMacierz(macierzWag);//wywietlenie wynikow
 	wypiszDroge(ujemnyCykl, droga);
-
-	droga.clear();//oczyszczanie
-	droga.resize(0);
-	zbiorWierzcholkowRozpatrzonych.clear();
-	zbiorWierzcholkowRozpatrzonych.resize(0);
 }
 
 
@@ -570,21 +525,24 @@ void Graf::bellmanaFordaMacierz()
 
 void Graf::wypiszDroge(bool ujemnyCykl, vector<elementNajkrotszejSciezki> droga) {
 	if (ujemnyCykl) {//sprawdzenie istnienia ujemnego cyklu
-		cout <<endl<< "Cykl ujemny" << endl;
+		cout << endl << endl << "Cykl ujemny" << endl;
 	}
 	else {
-		cout <<endl<<endl<< "Koniec : Wartosc drogi : Droga" << endl << endl;
-		elementNajkrotszejSciezki element;
-		cout << "0 : 0 : 0" << endl;
-		for (int a = 1; a < (int)droga.size(); a++) {//wyswietlenie wag i drog 
-			cout << a << " : " << droga[a].wagaDrogi << " : ";
+		cout << endl << endl;
+	}
+	cout  << "Koniec : Wartosc drogi : Droga" << endl << endl;
+	elementNajkrotszejSciezki element;
+	cout << "0 : 0 : 0" << endl;
+	for (int a = 1; a < (int)droga.size(); a++) {//wyswietlenie wag i drog 
+		cout << a << " : " << droga[a].wagaDrogi << " : ";
+		if (!ujemnyCykl) {
 			element = droga[a];
-			wypiszSciezke(element);
-			cout <<a<< endl;
+		wypiszSciezke(element);
+		cout << a;
 		}
 		cout << endl;
 	}
-
+	cout << endl;
 }
 
 void Graf::wypiszSciezke(elementNajkrotszejSciezki element)
@@ -596,7 +554,6 @@ void Graf::wypiszSciezke(elementNajkrotszejSciezki element)
 		wypiszSciezke(*element.poprzedniElement);
 		cout << element.poprzedniWierzcholek << " -> ";
 	}
-	
 }
 
 void Graf::wypiszMST(vector<elementMinimalnegoDrzewa> wyniki, int wagaCalkowita)
@@ -633,7 +590,6 @@ bool Graf::znajdzCykl(elementNajkrotszejSciezki element, int wierzcholek)
 		if (element.poprzedniWierzcholek==wierzcholek) {
 			return true;
 		}
-		znajdzCykl(*element.poprzedniElement,wierzcholek);
+		return znajdzCykl(*element.poprzedniElement,wierzcholek);
 	}
-	
 }
