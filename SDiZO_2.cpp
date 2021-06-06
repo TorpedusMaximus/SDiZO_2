@@ -4,17 +4,58 @@
 #include <conio.h>
 #include <windows.h>
 #include <fstream>
+#include "Tester.h"
 
 using namespace std;
+
+void proceduraTestowa() {
+	Graf graf;
+	Tester tester;
+	float gestosci[4] = { 0.25, 0.5, 0.75, 0.99 };
+	int liczbaWierzcholkow[5] = { 50, 100, 175, 250, 350 };
+	for (int i = 3; i < 5; i++) {
+		for (int ii = 0; ii < 4; ii++) {
+			for (int petla = 0; petla < 100; petla++) {
+				graf.generujGraf(gestosci[ii],liczbaWierzcholkow[i]);
+				tester.startPomiaru();
+				graf.bellmanaFordaMacierz();
+				tester.zakonczPomiar();
+				graf.usunGraf();
+			}
+			tester.wypisz("\n");
+			cout << i << " " << ii << endl;
+		}
+	}
+	tester.wypisz("\n");
+
+	for (int i = 3; i < 5; i++) {
+		for (int ii = 0; ii < 4; ii++) {
+			for (int petla = 0; petla < 100; petla++) {
+				graf.generujGraf(gestosci[ii], liczbaWierzcholkow[i]);
+				tester.startPomiaru();
+				graf.bellmanaFordaLista();
+				tester.zakonczPomiar();
+				graf.usunGraf();
+			}
+			tester.wypisz("\n");
+			cout << i << " " << ii << endl;
+		}
+	}
+
+	graf.zakoncz();
+	tester.zakoncz();
+}
 
 void menu() {
 	Graf graf;
 	int wybor = 1;
+	float gestosc;
+	int liczbaWierzcholkow, gestoscProcenty;
 	string sciezka;
 
 	while (1) {  //menu glowne 
 		system("cls");
-		cout << "Menu\n1.Wczytaj Graf \n2.Wyswietl \n3.Wyznaczenie minimalnego drzewa rozpinajacego \n4.Wyznaczenie najkrotszej sciezki \n5.Wyczysc graf \n6.Wyjdz" << endl;
+		cout << "Menu\n1.Wczytaj Graf\n2.Generuj graf\n3.Wyswietl \n4.Wyznaczenie minimalnego drzewa rozpinajacego \n5.Wyznaczenie najkrotszej sciezki \n6.Wyczysc graf\n7.Procedura testowa\n8.Wyjdz" << endl;
 		cin >> wybor;
 		system("cls");
 
@@ -29,6 +70,14 @@ void menu() {
 			_getch();
 			break;
 		case 2:
+			cout << "Podaj gestosc w % i liczbe wierzcholkow generowanego grafu" << endl;
+			cin >> gestoscProcenty;
+			cin >> liczbaWierzcholkow;
+			gestosc = (1.0 * gestoscProcenty) / 100;
+			graf.generujGraf(gestosc,liczbaWierzcholkow);
+			_getch();
+			break;
+		case 3:
 			if (graf.liczbaWierzcholkow == 0) {
 				system("cls");
 				cout << "Brak grafu" << endl;
@@ -55,7 +104,7 @@ void menu() {
 				}
 			}
 			break;
-		case 3:
+		case 4:
 			if (graf.liczbaWierzcholkow == 0) {
 				system("cls");
 				cout << "Brak grafu" << endl;
@@ -120,7 +169,7 @@ void menu() {
 				}
 			}
 			break;
-		case 4:
+		case 5:
 			if (graf.liczbaWierzcholkow == 0) {
 				system("cls");
 				cout << "Brak grafu" << endl;
@@ -185,7 +234,7 @@ void menu() {
 				}
 			}
 			break;
-		case 5:
+		case 6:
 			if (graf.liczbaWierzcholkow == 0) {
 				cout << "Brak grafu" << endl;
 				_getch();
@@ -196,7 +245,10 @@ void menu() {
 			cout << "Wyczyszczono strukture" << endl;
 			_getch();
 			break;
-		case 6:
+		case 7:
+			proceduraTestowa();
+			break;
+		case 8:
 			graf.zakoncz();
 			return;
 			break;
@@ -206,6 +258,7 @@ void menu() {
 }
 
 int main() {
-	menu();
+	//menu();
+	proceduraTestowa();
 	return 0;
 }

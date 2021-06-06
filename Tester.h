@@ -13,8 +13,9 @@ public:
 
 	Tester();
 	void startPomiaru();
-	void zakonczPomiar(string kodAkcji);
+	void zakonczPomiar();
 	void zakoncz();
+	void wypisz(string tekst);
 
 private:
 	long long int odczytCzasu();

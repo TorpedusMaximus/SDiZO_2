@@ -10,7 +10,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include "Tester.h"
+#include <forward_list>
 #include "elementy.h"
 
 using namespace std;
@@ -18,7 +18,6 @@ using namespace std;
 class Graf{
 public:
 	//dane grafu
-	Tester tester;
 	string kodyAkcji[5] = { "wczytanie","MST-K","MST-P","NSG-D","NSG-BF"};
 	int liczbaKrawedzi = 0, liczbaWierzcholkow = 0, wierzcholekPoczatkowy = 0, wierzcholekKoncowy = 0;
 	float inf = numeric_limits<float>::infinity();
@@ -27,6 +26,7 @@ public:
 	bool ujemnaWaga;
 	
 	//zarzadzanie grafem
+	void generujGraf(float gestosc, int wierzcholki);
 	void wczytaj(string sciezka);
 	void wyswietlMacierz(vector<vector<float>> macierz);
 	void wyswietlListe(vector<list<elementListy>> lista);
@@ -53,5 +53,7 @@ private:
 	void sortujListe(vector<list<elementListy>> &lista);
 	void sortujListe(list<elementMinimalnegoDrzewa> &lista);
 	bool znajdzCykl(elementNajkrotszejSciezki element, int wierzcholek);
+	void zainicjujGraf();
+	void dodajKrawedz(int wierzcholekA, int wierzcholekB, float waga);
 };
 

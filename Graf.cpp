@@ -1,17 +1,53 @@
 #include "Graf.h"
 
 
+
 using namespace std;
 
 ////////////////////////////////////////graf////////////////////////////////////////
 
+void Graf::generujGraf(float gestosc, int wierzcholki) 
+{
+	usunGraf();
+	srand(time(NULL));
+	liczbaWierzcholkow = wierzcholki;//dane grafu
+	liczbaKrawedzi = gestosc * ((wierzcholki * (wierzcholki - 1)) / 2);
+	wierzcholekPoczatkowy = 0;
+	wierzcholekKoncowy = wierzcholki - 1;
+	zainicjujGraf();//incjacja struktury
+	int i, wierzcholekA = 0, wierzcholekB;
+	float waga;
+	vector<int> zbiorWierzcholkowNierozpatrzonych;
+	for (i = 1; i < liczbaWierzcholkow; i++) {//zbior zawierajacy wierzcholki bez zadnej krawedzi
+		zbiorWierzcholkowNierozpatrzonych.push_back(i);
+	}
+
+	for (i = 0; i < liczbaWierzcholkow-1; i++) {//upewnienie sie ze kazdy wierzcholek nalezy do grafu
+		wierzcholekB =zbiorWierzcholkowNierozpatrzonych[rand() % zbiorWierzcholkowNierozpatrzonych.size()];//losowanie wierzcholka B
+		waga = (rand() % 9)+1;
+		dodajKrawedz(wierzcholekA,wierzcholekB,waga);//dodanie krawedzi miedzy grafem a "wolnym" wierzcholkiem
+		wierzcholekA = wierzcholekB;
+		zbiorWierzcholkowNierozpatrzonych.erase(find(zbiorWierzcholkowNierozpatrzonych.begin(),zbiorWierzcholkowNierozpatrzonych.end(),wierzcholekB));//usuniecie wierzcholka przylaczonego do grafu 
+	}
+
+	for (i; i < liczbaKrawedzi; i++) {//uzupelnienie pozostalych krawedzi
+		wierzcholekA = rand() % liczbaWierzcholkow;
+		wierzcholekB = rand() % liczbaWierzcholkow;
+		if (macierzWag[wierzcholekA][wierzcholekB] != inf || wierzcholekA == wierzcholekB || macierzWag[wierzcholekB][wierzcholekA] != inf) {//sprawdzenie czy krawedz juz nie istnieje lub czy krawedz kierune na tens am wierzcholek
+			i--;
+			continue;
+		}
+		waga = (rand() % 9) + 1;
+		dodajKrawedz(wierzcholekA, wierzcholekB, waga);
+	}
+	sortujListe(listaSasiadow);//sortownie elementow listy sasiadow - przyda sie do pozniejszych algorytmow
+}
 
 void Graf::wczytaj(string sciezka)
 {
 	usunGraf();
 	fstream dane;//handler pliku
 	float krawedz[3];
-	elementListy temp;
 	dane.open(sciezka, fstream::in);//wczytanie pliku
 	if (!dane.is_open()) {
 		cout << "Bledna sciezka pliku" << endl;
@@ -23,8 +59,7 @@ void Graf::wczytaj(string sciezka)
 	dane >> wierzcholekPoczatkowy;
 	dane >> wierzcholekKoncowy;
 
-	macierzWag.resize(liczbaWierzcholkow, vector<float>(liczbaWierzcholkow, inf));//przygotownaie struktury na dane
-	listaSasiadow.resize(liczbaWierzcholkow);
+	zainicjujGraf();
 
 	for (int i = 0; i < liczbaKrawedzi; i++) {
 		dane >> krawedz[0];//wczytanie danych krawedzi
@@ -43,16 +78,12 @@ void Graf::wczytaj(string sciezka)
 			cout << "Bledny wierzcholek koncowy (linia " << i + 1 << ")." << endl;
 			continue;
 		}
-		
-		macierzWag[(int)krawedz[0]][(int)krawedz[1]] = krawedz[2];//dodanie do macierzy 
-
-		temp.wierzcholek = (int)krawedz[1];  //krawedz sasiedztwa
-		temp.waga = krawedz[2];
-		listaSasiadow[(int)krawedz[0]].push_back(temp);//dodanie krawedzi do wierzcholka 
+	
+		dodajKrawedz(krawedz[0],krawedz[1],krawedz[2]);
 	}
 
 	dane.close();//usuniecie handlera
-	sortujListe(listaSasiadow);
+	sortujListe(listaSasiadow);//sortownie elementow listy sasiadow - przyda sie do pozniejszych algorytmow
 	cout << "Wczytano graf" << endl;
 }
 
@@ -133,7 +164,7 @@ void Graf::zakoncz()
 	usunGraf();//usuwanie grafu
 	system("cls");
 	cout << "Usunieto graf" << endl;
-	tester.zakoncz();//usuwanie testera
+	//tester.zakoncz();//usuwanie testera
 }
 
 
@@ -164,7 +195,7 @@ void Graf::kruskalaLista()
 	}
 	
 	sortujListe(krawedzie);//sortowanie krawedzi
-	wyswietlListe(listaSasiadow);
+	//wyswietlListe(listaSasiadow);
 	vector<int>::iterator flagaA, flagaB;
 	int indexA, indexB;  
 
@@ -195,7 +226,7 @@ void Graf::kruskalaLista()
 			wagaCalkowita += elementMST.waga;//zwiekszenie calkowitem wagi
 		}
 	}
-	wypiszMST(wyniki, wagaCalkowita);
+	//wypiszMST(wyniki, wagaCalkowita);
 }
 
 void Graf::kruskalaMacierz()
@@ -224,7 +255,7 @@ void Graf::kruskalaMacierz()
 	}
 
 	sortujListe(krawedzie);//sortowanie krawedzi
-	wyswietlMacierz(macierzWag);
+	//wyswietlMacierz(macierzWag);
 	vector<int>::iterator flagaA, flagaB;
 	int indexA, indexB;
 
@@ -255,7 +286,7 @@ void Graf::kruskalaMacierz()
 			wagaCalkowita += elementMST.waga;//zwiekszenie calkowitem wagi
 		}
 	}
-	wypiszMST(wyniki, wagaCalkowita);
+	//wypiszMST(wyniki, wagaCalkowita);
 }
 
 void Graf::primaLista()
@@ -305,8 +336,8 @@ void Graf::primaLista()
 		wyniki[i].wierzcholekB = nastepnyWierzcholek;
 		wyniki[i].waga = minimum;
 	}
-	wyswietlListe(listaPrima);
-	wypiszMST(wyniki, wagaCalkowita);
+	//wyswietlListe(listaPrima);
+	//wypiszMST(wyniki, wagaCalkowita);
 }
 
 void Graf::primaMacierz()
@@ -321,7 +352,7 @@ void Graf::primaMacierz()
 			}
 		}
 	}
-	wyswietlMacierz(macierzPrima);
+	//wyswietlMacierz(macierzPrima);
 
 	vector<elementMinimalnegoDrzewa> wyniki;//struktura prechowujaca wyniki
 	wyniki.resize(liczbaWierzcholkow - 1);
@@ -355,8 +386,8 @@ void Graf::primaMacierz()
 		wyniki[i].wierzcholekB = nastepnyWierzcholek;
 		wyniki[i].waga = minimum;
 	}
-	wyswietlMacierz(macierzPrima);
-	wypiszMST(wyniki, wagaCalkowita);
+	//wyswietlMacierz(macierzPrima);
+	//wypiszMST(wyniki, wagaCalkowita);
 }
 
 
@@ -400,8 +431,8 @@ void Graf::dijkstryLista()
 			}
 		}
 	}
-	wyswietlListe(listaSasiadow);//wywietlenie wynikow
-	wypiszDroge(false, droga);
+	//wyswietlListe(listaSasiadow);//wywietlenie wynikow
+	//wypiszDroge(false, droga);
 }
 
 void Graf::dijkstryMacierz()
@@ -443,8 +474,8 @@ void Graf::dijkstryMacierz()
 			}
 		}
 	}
-	wyswietlMacierz(macierzWag);//wywietlenie wynikow
-	wypiszDroge(false, droga);
+	//wyswietlMacierz(macierzWag);//wywietlenie wynikow
+	//wypiszDroge(false, droga);
 }
 
 void Graf::bellmanaFordaLista()
@@ -478,8 +509,8 @@ void Graf::bellmanaFordaLista()
 			//break;
 		}
 	}
-	wyswietlListe(listaSasiadow);//wywietlenie wynikow
-	wypiszDroge(ujemnyCykl, droga);
+	//wyswietlListe(listaSasiadow);//wywietlenie wynikow
+	//wypiszDroge(ujemnyCykl, droga);
 }
 
 void Graf::bellmanaFordaMacierz()
@@ -515,8 +546,8 @@ void Graf::bellmanaFordaMacierz()
 			//break;
 		}
 	}
-	wyswietlMacierz(macierzWag);//wywietlenie wynikow
-	wypiszDroge(ujemnyCykl, droga);
+	//wyswietlMacierz(macierzWag);//wywietlenie wynikow
+	//wypiszDroge(ujemnyCykl, droga);
 }
 
 
@@ -592,4 +623,20 @@ bool Graf::znajdzCykl(elementNajkrotszejSciezki element, int wierzcholek)
 		}
 		return znajdzCykl(*element.poprzedniElement,wierzcholek);
 	}
+}
+
+void Graf::zainicjujGraf()
+{
+	macierzWag.resize(liczbaWierzcholkow, vector<float>(liczbaWierzcholkow, inf));//przygotownaie struktury na dane
+	listaSasiadow.resize(liczbaWierzcholkow);
+}
+
+void Graf::dodajKrawedz(int wierzcholekA, int wierzcholekB, float waga)
+{
+	elementListy temp;
+	macierzWag[wierzcholekA][wierzcholekB] = waga;//dodanie do macierzy 
+
+	temp.waga = waga;  //krawedz sasiedztwa
+	temp.wierzcholek = wierzcholekB;
+	listaSasiadow[wierzcholekA].push_back(temp);//dodanie krawedzi do wierzcholka 
 }
