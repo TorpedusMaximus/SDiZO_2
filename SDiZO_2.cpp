@@ -13,27 +13,12 @@ void proceduraTestowa() {
 	Tester tester;
 	float gestosci[4] = { 0.25, 0.5, 0.75, 0.99 };
 	int liczbaWierzcholkow[5] = { 50, 100, 175, 250, 350 };
-	for (int i = 3; i < 5; i++) {
+	for (int i = 0; i < 5; i++) {
 		for (int ii = 0; ii < 4; ii++) {
 			for (int petla = 0; petla < 100; petla++) {
 				graf.generujGraf(gestosci[ii],liczbaWierzcholkow[i]);
 				tester.startPomiaru();
-				graf.bellmanaFordaMacierz();
-				tester.zakonczPomiar();
-				graf.usunGraf();
-			}
-			tester.wypisz("\n");
-			cout << i << " " << ii << endl;
-		}
-	}
-	tester.wypisz("\n");
-
-	for (int i = 3; i < 5; i++) {
-		for (int ii = 0; ii < 4; ii++) {
-			for (int petla = 0; petla < 100; petla++) {
-				graf.generujGraf(gestosci[ii], liczbaWierzcholkow[i]);
-				tester.startPomiaru();
-				graf.bellmanaFordaLista();
+				graf.bellmanaFordaMacierz();//algorytm do badania
 				tester.zakonczPomiar();
 				graf.usunGraf();
 			}
@@ -258,7 +243,7 @@ void menu() {
 }
 
 int main() {
-	//menu();
-	proceduraTestowa();
+	menu();
+	//proceduraTestowa();
 	return 0;
 }
